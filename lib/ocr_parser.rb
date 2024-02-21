@@ -1,4 +1,4 @@
-class Parser
+class OCRParser
   def initialize(file_path)
     @file_path = file_path
   end
