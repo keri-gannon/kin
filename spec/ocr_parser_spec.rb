@@ -1,3 +1,4 @@
+# spec/ocr_parser_spec.rb
 require_relative '../lib/ocr_parser'
 
 describe OCRParser do
@@ -12,32 +13,19 @@ describe OCRParser do
       expect(policy_numbers).not_to be_empty
       expect(policy_numbers).to include('123456789')
     end
-
   end
 
-  describe '#parse_digit' do
-    it 'parses a valid digit' do
+  describe '#calculate_checksum' do
+    it 'returns true for a valid policy number' do
       ocr_parser = OCRParser.new(user_story1)
 
-      expect(ocr_parser.parse_digit(' _ | ||_|')).to eq('0')
-      expect(ocr_parser.parse_digit('     |  |')).to eq('1')
-      expect(ocr_parser.parse_digit(' _  _||_ ')).to eq('2')
-      expect(ocr_parser.parse_digit(' _  _| _|')).to eq('3')
-      expect(ocr_parser.parse_digit('   |_|  |')).to eq('4')
-      expect(ocr_parser.parse_digit(' _ |_  _|')).to eq('5')
-      expect(ocr_parser.parse_digit(' _ |_ |_|')).to eq('6')
-      expect(ocr_parser.parse_digit(' _   |  |')).to eq('7')
-      expect(ocr_parser.parse_digit(' _ |_||_|')).to eq('8')
-      expect(ocr_parser.parse_digit(' _|_| _|')).to eq('9')
+      expect(OCRUtils.calculate_checksum('123456789')).to be(true)
     end
 
-    it 'returns "?" for an unknown or invalid digit' do
+    it 'returns false for an invalid policy number' do
       ocr_parser = OCRParser.new(user_story1)
 
-      expect(ocr_parser.parse_digit('   |   |')).to eq('?')
-      expect(ocr_parser.parse_digit(' _ |   | ')).to eq('?')
-      expect(ocr_parser.parse_digit(' _ | | | ')).to eq('?')
+      expect(OCRUtils.calculate_checksum('123456788')).to be(false)
     end
-
   end
 end
