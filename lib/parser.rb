@@ -1,18 +1,44 @@
 class Parser
-  def initialize
+  def initialize(file_path)
     @file_path = file_path
   end
-end
 
-# Kin has just recently purchased an ingenious machine to assist in reading policy
-# report documents. The machine scans the paper documents for policy numbers,
-# and produces a file with a number of entries which each look like this:
-# _ _ _ _ _ _ _
-# | _| _||_||_ |_ ||_||_|
-# ||_ _| | _||_| ||_| _|
-# Each entry is 4 lines long, and each line has 27 characters. The first 3 lines of each
-# entry contain a policy number written using pipes and underscores, and the fourth
-# line is blank. Each policy number should have 9 digits, all of which should be in the
-# range 0-9. A normal file contains around 500 entries.
-# Your first task is to write a program that can take this file and parse it into actual
-# numbers.
+  def parse_policy_numbers()
+    # Read the file and split it into entries
+    entries = File.read(@file_path).split("\n\n")
+    policy_numbers = []
+    entries.each do |entry|
+      # Split each entry into lines
+      lines = entry.split("\n")
+      # Initialize an array to store the digits of the policy number
+      digits = []
+      # Loop through the lines and extract digits
+      (0...9).each do |i|
+        digit_slice = lines.map { |line| line[i * 3, 3] }
+        digit = parse_digit(digit_slice.join)
+        digits << digit
+      end
+      # Concatenate the digits to form the policy number
+      policy_numbers << digits.join
+    end
+    return policy_numbers
+  end
+
+  def parse_digit(digit_str)
+    # Map characters to digits
+    digit_map = {
+      ' _ | ||_|' => '0',
+      '     |  |' => '1',
+      ' _  _||_ ' => '2',
+      ' _  _| _|' => '3',
+      '   |_|  |' => '4',
+      ' _ |_  _|' => '5',
+      ' _ |_ |_|' => '6',
+      ' _   |  |' => '7',
+      ' _ |_||_|' => '8',
+      ' _|_| _|' => '9',
+    }
+    # Return the corresponding digit or a placeholder '?'
+    digit_map[digit_str] || '?'
+  end
+end
