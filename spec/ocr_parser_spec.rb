@@ -1,4 +1,3 @@
-# spec/ocr_parser_spec.rb
 require_relative '../lib/ocr_parser'
 
 describe OCRParser do
