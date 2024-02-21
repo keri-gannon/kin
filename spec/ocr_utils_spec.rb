@@ -1,4 +1,3 @@
-# spec/ocr_utils_spec.rb
 require_relative '../lib/ocr_utils'
 
 describe OCRUtils do
